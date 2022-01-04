@@ -10,12 +10,21 @@ class _AddpostScreenState extends State<AddpostScreen> {
   @override
   Widget build(BuildContext context) {
 
-    return Center(
-      child: Text(
-        'Add Post',
-        style: TextStyle(
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color.fromRGBO(127, 71, 221, 1),
+        title: Padding(
+          padding: const EdgeInsets.only(right: 50.0),
+          child: Center(
+          child: Text(
+          'EASY REACH',
+          style: TextStyle(
+          color: Colors.white,
           fontSize: 25.0,
           fontWeight: FontWeight.bold,
+          ),
+          ),
+      ),
         ),
       ),
     );

@@ -1,4 +1,4 @@
-import 'dart:js';
+import 'package:js/js.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gp/navbar.dart';
 import 'addpost_screen.dart';
@@ -90,10 +90,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         floatingActionButton: FloatingActionButton(
-
           shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),),
-
           child: Icon(Icons.add,size: 35.0,),
             backgroundColor: Color.fromRGBO(127, 71, 221, 1),
 
