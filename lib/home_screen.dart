@@ -56,7 +56,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       icon: Icon(Icons.search),
                       iconSize: 25.0,
                       color: Color.fromRGBO(127, 71, 221, 1),
-                      onPressed: () {},
+                      onPressed: () {
+                        showSearch(
+                            context: context,
+                            delegate: MySearchDelegate (),
+                        );
+                      },
                       ),
                     ),
             //profile icon
@@ -120,11 +125,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
       ),
     );
-
-
-
-
   }
+
+
 
   buildPage() => SingleChildScrollView(
     child: Column(
@@ -632,6 +635,33 @@ class _HomeScreenState extends State<HomeScreen> {
     ),
 
   );*/
+}
+
+class MySearchDelegate extends SearchDelegate {
+
+  @override
+  List<Widget> buildActions(BuildContext context) => [
+
+    IconButton(
+        icon: const Icon(Icons.clear,color: Color.fromRGBO(122, 71, 221, 1),),
+        onPressed: () {
+          query = '';
+        },
+       )
+
+  ];
+
+  @override
+  Widget buildLeading(BuildContext context) => IconButton(
+    icon: Icon(Icons.arrow_back, color: Color.fromRGBO(122, 71, 221, 1),),
+    onPressed: () => close(context,null),
+  );
+
+  @override
+  Widget buildResults(BuildContext context) => Text('Result');
+
+  @override
+  Widget buildSuggestions(BuildContext context) => Text('Suggestion');
 }
 
 
