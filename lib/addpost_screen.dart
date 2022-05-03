@@ -88,8 +88,8 @@ class _AddpostScreenState extends State<AddpostScreen> {
 
                   ],
                 ),
-                SizedBox(height: 35,),
-                Align(
+                SizedBox(height: 395,),
+                /*Align(
                   alignment: Alignment.topLeft,
                   child: Text('What is the item?',
                     style: TextStyle(
@@ -99,12 +99,36 @@ class _AddpostScreenState extends State<AddpostScreen> {
 
 
                     ),),
-                ),
-
+                ),*/
                 //RADIO BUTTONS
-                Row(
+                /*Row(
                   children: [
 
+                  ],
+                )*/
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: Offset(0, 10),
+                            ),
+                          ],
+                        ),
+                        child: TextButton(
+                            onPressed: ()=> print('Posted'),
+                            child: Text('POST',style: TextStyle(fontWeight: FontWeight.bold,color: Color.fromRGBO(122, 71, 221, 1)),)),
+                      ),
+                    ),
                   ],
                 )
 
