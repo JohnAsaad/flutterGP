@@ -1,6 +1,8 @@
 import 'package:js/js.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gp/navbar.dart';
+import 'package:provider/provider.dart';
+
 import 'addpost_screen.dart';
 import 'menu_screen.dart';
 
@@ -21,6 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context)
   {
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(

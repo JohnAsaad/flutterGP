@@ -48,7 +48,12 @@ class NavBar extends StatelessWidget {
                   foregroundColor: Colors.white,
                   child: Icon(Icons.account_circle)),
               title: Text('Profile',style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold,)),
-              onTap: () => print('Profile'),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context)=>CategoryScreen1())
+                );
+              },
             ),
             SizedBox(height: 20,),
 

@@ -4,6 +4,7 @@ import 'package:flutter_gp/login_screen.dart';
 import 'package:flutter_gp/signup_screen.dart';
 import 'package:flutter_gp/navbar.dart';
 
+
 void main() {
   runApp(MyApp());
 }
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget
     return MaterialApp(
 
       debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
+      home: SignupScreen(),
     );
   }
 }

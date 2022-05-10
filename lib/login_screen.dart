@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gp/home_screen.dart';
+import 'package:flutter_gp/signup_screen.dart';
 
 class LoginScreen extends StatelessWidget {
 
@@ -128,6 +130,10 @@ class LoginScreen extends StatelessWidget {
                                     {
                                       print(emailController.text);
                                       print(passwordController.text);
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context)=>HomeScreen())
+                                      );
                                     },
                                     child: Text('Login',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
                                   ),
@@ -141,7 +147,12 @@ class LoginScreen extends StatelessWidget {
                                 children: [
                                   Text('Don\'t have an account?', style: TextStyle(color: Colors.white,),),
                                   TextButton(
-                                      onPressed: (){},
+                                      onPressed: (){
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(builder: (context)=>SignupScreen())
+                                        );
+                                      },
                                        child: Text('Register'),
                                   )
                                 ],
