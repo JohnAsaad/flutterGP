@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gp/categoryscreen1.dart';
 import 'package:flutter_gp/categoryscreen3.dart';
+import 'package:flutter_gp/profile_page_screen.dart';
 import 'package:flutter_gp/savedposts_screen.dart';
 import 'package:flutter_gp/settings_screen.dart';
 
@@ -51,7 +52,7 @@ class NavBar extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context)=>CategoryScreen1())
+                    MaterialPageRoute(builder: (context)=>ProfilePage())
                 );
               },
             ),
