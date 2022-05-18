@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gp/categoryscreen1.dart';
 import 'package:flutter_gp/categoryscreen3.dart';
+import 'package:flutter_gp/login_screen.dart';
 import 'package:flutter_gp/profile_page_screen.dart';
 import 'package:flutter_gp/savedposts_screen.dart';
 import 'package:flutter_gp/settings_screen.dart';
@@ -155,7 +156,12 @@ class NavBar extends StatelessWidget {
                   foregroundColor: Colors.white,
                   child: Icon(Icons.exit_to_app)),
               title: Text('Log Out',style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold,)),
-              onTap: () => print('LogOut'),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context)=>LoginScreen())
+                );
+              },
             ),
 
 

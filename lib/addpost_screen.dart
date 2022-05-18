@@ -1,6 +1,10 @@
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gp/navbar.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddpostScreen extends StatefulWidget {
 
@@ -12,6 +16,21 @@ class _AddpostScreenState extends State<AddpostScreen> {
 
   List<bool> isSelected = [false, false];
   List<bool> isSelected2 = [false, false];
+
+
+  File? image;
+  Future pickImage(ImageSource source) async {
+    try {
+      final image = await ImagePicker().pickImage(source: source);
+      if (image == null) return;
+
+      final imageTemporary = File(image.path);
+      setState(() => this.image = imageTemporary);
+    } on PlatformException catch (e) {
+      print('Failed to pick image: $e');
+    }
+
+  }
 
 
   @override
@@ -46,7 +65,7 @@ class _AddpostScreenState extends State<AddpostScreen> {
                   //ADD POST TEXT AND DESCRIPTION WITH IMAGE BUTTON
                   Column(
                     children: [
-                      SizedBox(height:25.0),
+                      SizedBox(height:20.0),
                       //ADD POST TEXT
                       Text('ADD POST',
                       style: TextStyle(
@@ -64,10 +83,10 @@ class _AddpostScreenState extends State<AddpostScreen> {
                             color: Colors.black54,
                             fontWeight: FontWeight.w500,
                             fontStyle: FontStyle.italic,
-                            fontSize: 16.0,
+                            fontSize: 14.0,
                           ),),
                       ),
-                      SizedBox(height:15.0),
+                      SizedBox(height:12.0),
                       //TOGGLE BUTTON FOR ITEM OR PERSON
                       Container(
 
@@ -115,10 +134,10 @@ class _AddpostScreenState extends State<AddpostScreen> {
                             color: Colors.black54,
                             fontWeight: FontWeight.w500,
                             fontStyle: FontStyle.italic,
-                            fontSize: 16.0,
+                            fontSize: 14.0,
                           ),),
                       ),
-                      SizedBox(height:15.0),
+                      SizedBox(height:12.0),
                       //TOGGLE BUTTON FOR LOST OR FOUND
                       Container(
 
@@ -192,24 +211,69 @@ class _AddpostScreenState extends State<AddpostScreen> {
                       SizedBox(height: 5,),
                       const Divider(height: 10.0,thickness: 0.5),
                       SizedBox(height: 5,),
+
+                      //** THIS IS THE PLACEHOLDER FOR UPLOADED IMAGE (mn el ** l7d ** el comment l tani)
+                      image != null
+                          ? ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Image.file(
+                            image!,
+                            width: 140,
+                            height: 140,
+                            fit: BoxFit.cover,
+                        
+                              ),
+                          )
+                          : ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: Container(
+                              height: 120,
+                              width: 120,
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: AssetImage('assets/images/Placeholder.png'),
+                                    fit: BoxFit.fill,
+                            )
+                        ),
+                        ),
+                          ),
+                      //**
+                      SizedBox(height: 5,),
+                      const Divider(height: 10.0,thickness: 0.5),
+                      SizedBox(height: 5,),
                       //IMAGE BUTTON
                       Row(
                         children: [
+                          //ADD IMAGE FROM GALLERY
                           Expanded(
                             child: Container(
                               decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(24),
                               color: Color.fromRGBO(122, 71, 221, 1),
                               ),
-                                child: IconButton(onPressed: () => print('ADD'),
+                                child: IconButton(onPressed: () => pickImage(ImageSource.gallery),
+                                    icon: Icon(Icons.photo_outlined,color: Colors.white,)
+
+                                )),
+                          ),
+                          SizedBox(width: 20),
+                          //TAKE IMAGE FROM CAMERA
+                          Expanded(
+                            child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(24),
+                                  color: Color.fromRGBO(122, 71, 221, 1),
+                                ),
+                                child: IconButton(onPressed: () => pickImage(ImageSource.camera ),
                                     icon: Icon(Icons.camera_alt_outlined,color: Colors.white,)
 
                                 )),
                           )
 
+
                         ],
                       ),
-                      SizedBox(height: 95,),
+                      SizedBox(height: 25,),
                       /*Align(
                         alignment: Alignment.topLeft,
                         child: Text('What is the item?',
@@ -230,7 +294,7 @@ class _AddpostScreenState extends State<AddpostScreen> {
 
                     ],
                   ),
-                  SizedBox(height:45.0),
+                  SizedBox(height:1.0),
                   //POST BUTTON
                   Column(
 
@@ -266,7 +330,9 @@ class _AddpostScreenState extends State<AddpostScreen> {
                       )
 
                     ],
-                  )
+                  ),
+
+                  SizedBox(height:22.0),
                 ],
               ),
 

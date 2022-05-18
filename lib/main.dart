@@ -4,6 +4,8 @@ import 'package:flutter_gp/login_screen.dart';
 import 'package:flutter_gp/signup_screen.dart';
 import 'package:flutter_gp/navbar.dart';
 
+import 'edit_profile_screen.dart';
+
 
 void main() {
   runApp(MyApp());

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gp/edit_profile_screen.dart';
 import 'package:flutter_gp/utils/user_prefrences.dart';
 import 'package:flutter_gp/widget/appbar_widget.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_gp/widget/numbers_widget.dart';
 import 'package:flutter_gp/widget/profile_widget.dart';
 import 'model/user.dart';
@@ -31,7 +31,11 @@ class _ProfilePageState extends State<ProfilePage> {
 
           ProfileWidget(
             imagePath: user.imagePath,
-            onClicked: () async {},
+            onClicked: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => EditProfileScreen()),
+              );
+            },
           ),
           const SizedBox(height: 24),
           buildName(user),
