@@ -1,194 +1,460 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gp/home_screen.dart';
 import 'package:flutter_gp/login_screen.dart';
+//import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart'as http;
+import 'dart:convert';
+import 'package:flutter/cupertino.dart';
+//import 'package:fluttertoast/fluttertoast.dart';
 
-class SignupScreen extends StatelessWidget {
 
-  var emailController = TextEditingController();
-  var passwordController = TextEditingController();
+class SignupScreen extends StatefulWidget {
+
 
   @override
+  _SingupState createState() => _SingupState();
+}
+
+class _SingupState extends State<SignupScreen> {
+
+
+  bool visible = false ;
+  var msg;
+
+  final email = TextEditingController();
+  final password = TextEditingController();
+  final name = TextEditingController();
+
+  /*savepref(String name ,String email,String id) async {
+    SharedPreferences preferences=await SharedPreferences.getInstance();
+    preferences.setString("name", name);
+    preferences.setString("email", email);
+    preferences.setString("id", id);
+
+    print(preferences.getString("name"));
+    print(preferences.getString("email"));
+    print(preferences.getString("id"));
+  }*/
+  Future userSignup() async{
+
+    // Showing CircularProgressIndicator.
+    String url = "http://192.168.0.100:8888/ERapi/register.php";
+
+    setState(() {
+      visible = true;
+    });
+
+    var data ={
+      "name":name.text,
+      "email":email.text,
+      "password":password.text,
+
+    };
+    print(data);
+
+    var response = await http.post(Uri.parse(url),
+      body: json.encode(data),
+      headers: {
+        "Accept": "application/json",
+        "Access-Control_Allow_Origin": "*"
+      },);
+
+    if (response.statusCode == 200) {
+      //Server response into variable
+      print(response.body);
+
+      msg = jsonDecode(response.body);
+
+      if (msg['SignupStatus'] == true) {
+
+        setState(() {
+          //hide progress indicator
+          visible = false;
+        });
+
+        // Navigate to Home Screen
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => HomeScreen()));
+      } else {
+        setState(() {
+          //hide progress indicator
+          visible = false;
+
+          //Show Error Message Dialog
+          showMessage(msg["message"]);
+        });
+      }
+    } else {
+      setState(() {
+        //hide progress indicator
+        visible = false;
+
+        //Show Error Message Dialog
+        showMessage("Error during connecting to Server.");
+      });
+    }
+  }
+  Future<dynamic> showMessage(String _msg) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: new Text(_msg),
+          actions: <Widget>[
+            TextButton(
+              child: new Text("OK"),
+              onPressed: () {
+                //savepref(msg['name'], msg['email'],msg['id']);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  final _formsignupKey = GlobalKey<FormState>();
+
+  @override
+
   Widget build(BuildContext context) {
-
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Container(
-        child: SingleChildScrollView(
-          child: Expanded(
-            child: Column(
-              children: [
-                //container for all screen with background image
-                Container(
-                  height: 800,
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: AssetImage('assets/images/BG.png'),
-                          fit: BoxFit.cover
-                      )
+    return SafeArea(
+        child: Scaffold(
+          body: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Expanded(
+              child: Container(
+                height: 800,
+                decoration: BoxDecoration(
+                  image: DecorationImage(image: AssetImage('assets/images/BG.png'),
+                      fit: BoxFit.cover
                   ),
-                  child: Stack(
-                    //stack for login text and two text fields and a button
-                    children: [
-                      Positioned(
-                        child: Container(
-                          //For Login Text
-                          margin: EdgeInsetsDirectional.only(bottom: 300),
-                          child: Center(
-                              child: Text(
-                                "Sign\nUp",
-                                style: TextStyle(color:Colors.white, fontSize: 95,fontWeight: FontWeight.bold,),
-                              )
-                          ),
-                        ),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Visibility(
+                      visible: visible,
+                      child: Container(
+
+                        margin: EdgeInsets.only(bottom: 10.0),
+                        child: LinearProgressIndicator(),
                       ),
-                      Container(
-                        //contains text fields
-                        padding: EdgeInsetsDirectional.only(top:360),
-                        child: Padding(
-                          padding:  EdgeInsets.all(30.0),
-                          child: Column(
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(5.0),
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(15),
-                                    boxShadow: [
-                                      BoxShadow(
-                                          color: Color.fromRGBO(77 , 77, 77, .4),
-                                          blurRadius: 20.0,
-                                          offset: Offset(0 , 10)
-                                      ),
-                                    ]
-                                ),
-                                child: Column(
-                                  children: [
+                    ),
+                    SizedBox(height: 90,),
+                  /*  Icon(
+                      Icons.group,
+                      color: Theme.of(context).primaryColor,
+                      size: 80.0,
+                    ),*/
+                    SizedBox(
+                      height: 0.0,
+                    ),
+                    Text(
+                      'SIGN\nUP',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 75.0,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
 
-                                    Container(
-                                      padding: EdgeInsets.all(7.0),
-                                      decoration: BoxDecoration(
-                                          border: Border(bottom: BorderSide(color: Colors.white30))
-                                      ),
-                                      child: TextField(
-                                        controller: emailController,
-                                        keyboardType: TextInputType.emailAddress,
-                                        decoration: InputDecoration(
-                                          border: InputBorder.none,
-                                          labelText: "Email",
-                                          labelStyle: TextStyle(color: Colors.grey[400]) ,
-                                          prefixIcon: Icon(
-                                            Icons.email_outlined,
-                                          ),
-                                          prefixIconColor: Colors.grey[400],
-                                        ),
-                                      ),
+                    Form(
+                      key: _formsignupKey,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 22.0),
+                        child: Column(
+                          children: [
 
-                                    ),
-                                    Container(
-                                      padding: EdgeInsets.all(7.0),
-
-                                      child: TextField(
-
-                                        keyboardType: TextInputType.number,
-                                        obscureText: true,
-                                        decoration: InputDecoration(
-                                          border: InputBorder.none,
-                                          labelText: "Phone Number",
-                                          labelStyle: TextStyle(color: Colors.grey[400]) ,
-                                          prefixIcon: Icon(
-                                            Icons.phone_android_outlined,
-                                          ),
-                                        ),
-                                      ),
-
-                                    ),
-                                    Container(
-                                      padding: EdgeInsets.all(7.0),
-
-                                      child: TextField(
-                                        controller: passwordController,
-                                        keyboardType: TextInputType.visiblePassword,
-                                        obscureText: true,
-                                        decoration: InputDecoration(
-                                          border: InputBorder.none,
-                                          labelText: "Password",
-                                          labelStyle: TextStyle(color: Colors.grey[400]) ,
-                                          prefixIcon: Icon(
-                                            Icons.lock_outline,
-                                          ),
-                                          suffixIcon: Icon(
-                                            Icons.remove_red_eye_outlined,
-                                          ),
-                                        ),
-                                      ),
-
-                                    ),
-
-                                  ],
-                                ),
+                            Theme(
+                              data: new ThemeData(
+                                primaryColor: Colors.white,
+                                primaryColorDark: Colors.white,
+                                hintColor:
+                                Colors.white, //placeholder color
                               ),
-                              SizedBox(height: 30,),
-                              Container(
+                              child: TextFormField(
+                                controller: name,
+                                decoration: InputDecoration(
+                                  labelStyle: TextStyle(color: Colors.white),
+                                  focusedBorder: new OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                    borderSide: BorderSide(
+                                      color: Colors.white,
+                                      style: BorderStyle.solid,
+                                    ),
+                                  ),
+                                  enabledBorder: new OutlineInputBorder(
 
-                                //for login button
-
-                                height: 50,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
-                                    gradient: LinearGradient(
-                                        colors: [
-                                          Color.fromRGBO(51 , 51, 51, 1),
-                                          Color.fromRGBO(60 , 60, 60, 1),
-
-                                        ]
-                                    )
+                                    borderSide: BorderSide(
+                                      color: Colors.white,
+                                      style: BorderStyle.solid,
+                                    ),
+                                  ),
+                                  errorBorder: new OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                    borderSide: BorderSide(
+                                      color: Colors.red,
+                                      width: 1.0,
+                                      style: BorderStyle.solid,
+                                    ),
+                                  ),
+                                  labelText: 'User name',
+                                  prefixIcon: const Icon(
+                                    Icons.person,
+                                    color: Colors.white,
+                                  ),
+                                  border: new OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                    borderSide: BorderSide(
+                                      color: Colors.white,
+                                      style: BorderStyle.solid,
+                                    ),
+                                  ),
+                                  hintText: 'Enter User Name',
                                 ),
-                                child: Center(
-                                  child: MaterialButton(
-                                    onPressed: ()
-                                    {
-                                      print(emailController.text);
-                                      print(passwordController.text);
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(builder: (context)=>HomeScreen())
-                                      );
-                                    },
-                                    child: Text('Sign Up',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please Enter User name';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20.0,
+                            ),
+
+                            Theme(
+                              data: new ThemeData(
+                                primaryColor: Colors.white,
+                                primaryColorDark: Colors.white,
+                                hintColor:
+                                Colors.white, //placeholder color
+                              ),
+                              child: TextFormField(
+                                controller: email,
+                                decoration: InputDecoration(
+                                  labelStyle: TextStyle(color: Colors.white),
+                                  focusedBorder: new OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                    borderSide: BorderSide(
+                                      color: Colors.white,
+                                      style: BorderStyle.solid,
+                                    ),
+                                  ),
+                                  enabledBorder: new OutlineInputBorder(
+                                    //borderRadius: BorderRadius.circular(30),
+                                    borderSide: BorderSide(
+                                      color: Colors.white,
+                                      style: BorderStyle.solid,
+                                    ),
+                                  ),
+                                  errorBorder: new OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                    borderSide: BorderSide(
+                                      color: Colors.red,
+                                      width: 1.0,
+                                      style: BorderStyle.solid,
+                                    ),
+                                  ),
+                                  labelText: 'E-Mail',
+                                  prefixIcon: const Icon(
+                                    Icons.mail,
+                                    color: Colors.white,
+                                  ),
+                                  border: new OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                    borderSide: BorderSide(
+                                      color: Color.fromRGBO(84, 87, 90, 0.5),
+                                      style: BorderStyle.solid,
+                                    ),
+                                  ),
+                                  hintText: 'Enter E-Mail',
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please Enter User email';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20.0,
+                            ),
+
+                            Theme(
+                              data: new ThemeData(
+                                primaryColor: Colors.white,
+                                primaryColorDark: Colors.white,
+                                hintColor:
+                                Colors.white, //placeholder color
+                              ),
+                              child: TextFormField(
+                                controller: email,
+                                decoration: InputDecoration(
+                                  labelStyle: TextStyle(color: Colors.white),
+                                  focusedBorder: new OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                    borderSide: BorderSide(
+                                      color: Colors.white,
+                                      style: BorderStyle.solid,
+                                    ),
+                                  ),
+                                  enabledBorder: new OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.white,
+                                      style: BorderStyle.solid,
+                                    ),
+                                  ),
+                                  errorBorder: new OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                    borderSide: BorderSide(
+                                      color: Colors.red,
+                                      width: 1.0,
+                                      style: BorderStyle.solid,
+                                    ),
+                                  ),
+                                  labelText: 'Phone Number',
+                                  prefixIcon: const Icon(
+                                    Icons.phone_android_outlined,
+                                    color: Colors.white,
+                                  ),
+                                  border: new OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                    borderSide: BorderSide(
+                                      color: Color.fromRGBO(84, 87, 90, 0.5),
+                                      style: BorderStyle.solid,
+                                    ),
+                                  ),
+                                  hintText: 'Enter Phone Number',
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please Enter Phone Number';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20.0,
+                            ),
+
+                            Theme(
+                              data: new ThemeData(
+                                primaryColor: Colors.white,
+                                primaryColorDark: Colors.white,
+                                hintColor:
+                                Colors.white, //placeholder color
+                              ),
+                              child: TextFormField(
+                                controller: password,
+                                obscureText: true,
+                                decoration: InputDecoration(
+                                  labelStyle: TextStyle(color: Colors.white),
+                                  focusedBorder: new OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                    borderSide: BorderSide(
+                                      color: Colors.white,
+                                      style: BorderStyle.solid,
+                                    ),
+                                  ),
+                                  enabledBorder: new OutlineInputBorder(
+
+                                    borderSide: BorderSide(
+                                      color: Colors.white,
+                                      style: BorderStyle.solid,
+                                    ),
+                                  ),
+                                  errorBorder: new OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                    borderSide: BorderSide(
+                                      color: Colors.red,
+                                      width: 1.0,
+                                      style: BorderStyle.solid,
+                                    ),
+                                  ),
+                                  border: new OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                    borderSide: BorderSide(
+                                      color: Colors.white,
+                                      style: BorderStyle.solid,
+                                    ),
+                                  ),
+                                  labelText: 'Password',
+                                  prefixIcon: const Icon(
+                                    Icons.lock,
+                                    color: Colors.white,
+                                  ),
+                                  hintText: 'Enter Password',
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please Enter Password';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              height: 6.0,
+                            ),
+                            Row(
+
+                              //for register text
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text('Already have an account?', style: TextStyle(color: Colors.white,),),
+                                TextButton(
+                                  onPressed: (){
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context)=>LoginScreen())
+                                    );
+                                  },
+                                  child: Text('Login'),
+                                )
+                              ],
+                            ),
+
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  shape: new RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(50)
+                                  ),
+                                  primary: Color.fromRGBO(51, 51, 51, 1)
+                                  ,
+                                ),
+                                onPressed: () => {
+                                  // Validate returns true if the form is valid, or false otherwise.
+                                  if (_formsignupKey.currentState!.validate()) {userSignup()}
+                                },
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 62,vertical: 16),
+                                  child: Text(
+                                    'Sign Up',
+                                    style: TextStyle(fontSize: 22.0),
                                   ),
                                 ),
                               ),
-                              SizedBox(height: 20,),
-                              Row(
-
-                                //for register text
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text('Already have an account?', style: TextStyle(color: Colors.white,),),
-                                  TextButton(
-                                    onPressed: (){
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(builder: (context)=>LoginScreen())
-                                      );
-                                    },
-                                    child: Text('Login'),
-                                  )
-                                ],
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-
-              ],
+              ),
             ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 }
